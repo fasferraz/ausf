@@ -205,7 +205,8 @@ func UeAuthPostRequestProcedure(updateAuthenticationInfo models.AuthenticationIn
 		Kausf := EMSK[0:32]
 		ausfUeContext.Kausf = Kausf
 		var KausfDecode []byte
-		if ausfDecode, err := hex.DecodeString(Kausf); err != nil {
+//		if ausfDecode, err := hex.DecodeString(Kausf); err != nil {
+                if ausfDecode, err := hex.DecodeString(fmt.Sprintf("%02x",Kausf)); err != nil {	
 			logger.Auth5gAkaComfirmLog.Warnf("AUSF decode failed: %+v", err)
 		} else {
 			KausfDecode = ausfDecode
@@ -395,7 +396,8 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 				"eap packet decode error", ausfCurrentContext.UdmUeauUrl)
 			failEapAkaNoti := ConstructFailEapAkaNotification(eapContent.Id)
 			responseBody.EapPayload = failEapAkaNoti
-		} else if XRES == string(RES) { // decodeOK && XRES == res, auth success
+//		} else if XRES == string(RES) { // decodeOK && XRES == res, auth success
+		} else if XRES == fmt.Sprintf("%02x",RES) { // decodeOK && XRES == res, auth success
 			logger.EapAuthComfirmLog.Infoln("Correct RES value, EAP-AKA' auth succeed")
 			responseBody.AuthResult = models.AuthResult_SUCCESS
 			eapSuccPkt := ConstructEapNoTypePkt(radius.EapCodeSuccess, eapContent.Id)
