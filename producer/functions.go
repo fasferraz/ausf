@@ -216,10 +216,8 @@ func decodeResMac(packetData []byte, wholePacket []byte, Kautn string) ([]byte, 
 		if attributeType == ausf_context.AT_RES_ATTRIBUTE {
 			logger.EapAuthComfirmLog.Infoln("Detect AT_RES attribute")
 			detectRes = true
-			resLength := int(uint(dataArray[3+i]) | uint(dataArray[2+i])<<8)
-			RES = dataArray[4+i : 4+i+attributeLength-4]
-			byteRes := padZeros(RES, resLength)
-			RES = byteRes
+			resLength := (int(uint(dataArray[2+i])) * 256 + int(uint(dataArray[3+i]))) / 8
+			RES = dataArray[4+i : 4+i+resLength]
 		} else if attributeType == ausf_context.AT_MAC_ATTRIBUTE {
 			logger.EapAuthComfirmLog.Infoln("Detect AT_MAC attribute")
 			detectMac = true
